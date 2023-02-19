@@ -70,12 +70,14 @@ profit_margins <- new_df %>%
 
 # Function that allows for you to test the average profits from a
 # specified item by adjusting the sale price (total_profits)
-new_df %>% 
+apple_data <- new_df %>% 
   group_by(item_name) %>% 
-  filter(item_name == "Cabbage Wombok") %>% 
-  mutate(new_price = total_profit + 3) %>% 
+  filter(sub_category == "Apples") %>% 
+  mutate(new_price = total_profit + 0.51) %>% 
   summarise(avg_profit = mean(new_price))
+apple_data
 
+mean(apple_data$avg_profit)
 
 ## store's average profit per item (Any item)
 mean(new_df$total_profit)
@@ -185,10 +187,9 @@ length(profit_margins$item_name) #1,136 unique items
 another_data %>% 
   group_by(item_name) %>% 
   filter(sub_category == "Other Vegies") %>% 
-  summarise(n = length(item_name))
+  summarise(n = length(item_name)) %>% 
+  arrange(desc(n))
 
-# Total revenue earned by All Foods in 2 years
-total_revenue <- round(sum(another_data$total_profit), 2)
 
 # Function that finds PERCENTAGE of revenue per department and
 # sub-category
@@ -197,3 +198,87 @@ percentage_profit_margins_dep <- another_data %>%
   summarise(percentage = round((sum(total_profit)/total_revenue)*100, 4))
 
 sum(percentage_profit_margins_dep$percentage)
+
+# Finding how much money was made (in profit) from Broccoli sales
+another_data %>% 
+  filter(item_name == "Broccoli") %>% 
+  summarise(total_profit = sum(total_profit))
+
+###################################################################
+
+# Total revenue earned by All Foods in 2 years
+total_revenue <- round(sum(another_data$total_profit), 2)
+
+# Total Revenue in 2018 (Want to increase by $40,000)
+total_revenue_2018 <- another_data %>% 
+  filter(Year == 2018) %>% 
+  select(total_profit) %>% 
+  sum() %>% 
+  round(2)
+
+
+###################################################################
+
+
+#### MANIPULATING TO REACH $362,000 IN TOTAL REVENUE BY PRICE CHANGES
+
+
+experimental_revenue <- another_data %>% 
+  filter(Year == 2018) %>% 
+  select(total_profit) %>% 
+  sum() %>% 
+  round(2)
+
+experimental_dataset <- another_data
+
+experimental_dataset %>% 
+  filter(item_name == "Cabbage Wombok") %>% 
+  
+
+experimental_dataset$total_profit
+
+new_df %>% 
+  group_by(item_name) %>% 
+  filter(item_name == "Cabbage Wombak") %>% 
+  mutate(new_price = total_profit) %>% 
+  summarise(new_revenue = new_price)
+
+###################################################################
+
+# New columns to allow for easy experimentation of prices
+another_data$experimental_price = another_data$unit_selling_price
+another_data$unit_buying_price <- another_data %>% 
+  select(unit_buying_price) %>% 
+  replace(is.na(.), 0)
+another_data$experimental_profit = another_data$experimental_price*another_data$quantity - another_data$unit_buying_price*another_data$quantity     
+
+experimental_revenue = sum(another_data$experimental_profit)
+
+# Checking average profits for the Sweets sub_category
+another_data %>% 
+  filter(sub_category == "Sweets") %>% 
+  group_by(item_name) %>% 
+  summarise(avg_profits = mean(total_profit))
+
+
+###################################################################
+
+
+## Creating PNGs of graphs I made
+worst_profit$avg_profit <- round(worst_profit$avg_profit, 2)
+
+
+average_plot %>% 
+  arrange(avg_profit) %>% 
+  head(50)
+
+unit_price <- another_data %>% 
+  group_by(item_name) %>% 
+  summarise(unit_price = mean(unit_selling_price),
+            n = length(item_name),
+            category = unique(sub_category),
+            profit = mean(total_profit))
+
+# Average number of items sold between 2017-2018
+quantile(average_plot$num_sold)
+
