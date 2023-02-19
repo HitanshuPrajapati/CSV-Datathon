@@ -19,7 +19,7 @@ monthly_category_sales = df.groupby(['month', 'main_category'])['total_profit'].
 
 
 # create pivot table for bar stack to base off
-monthly_category_sales_pivot = pd.pivot_table(monthly_category_sales, values='total_profit', index='month', columns='main_category', aggfunc=np.max)
+monthly_category_sales_pivot = pd.pivot_table(monthly_category_sales, values='total_profit', index='month', columns='main_category', aggfunc=np.sum) 
 
 # actually making bar stack
 ax = monthly_category_sales_pivot.plot(kind='bar', stacked=True,figsize=(10, 6))  #10"x6"
