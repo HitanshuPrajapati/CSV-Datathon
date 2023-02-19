@@ -1,7 +1,6 @@
 library(dplyr)
 library(readr)
-sales_data_2017_2018 <- read_csv("Documents/datathon2023/sales_data_2017_2018_for_tableau_with_new_date_columns.csv")
-View(sales_data_2017_2018)
+sales_data_2017_2018 <- read_csv("Documents/datathon2023/CSV-Datathon/new_dataset.csv")
 
 # stop selling when 
 # 1 sell 1-10 item per year?
@@ -10,12 +9,12 @@ View(sales_data_2017_2018)
 # store should stop selling? 
 
 sales_data_2017 <- sales_data_2017_2018 %>% 
-  filter(year == 2017)
+  filter(Year == 2017)
 
 # View(sales_data_2017)
 
 sales_data_2018 <- sales_data_2017_2018 %>% 
-  filter(year == 2018)
+  filter(Year == 2018)
 
 # View(sales_data_2018)
 
@@ -48,20 +47,36 @@ items_both <- item_count_2017 %>%
 sales_count_2017_2018 <- sales_data_2017_2018 %>% 
   group_by(item_name) %>% 
   summarise(sales_count = n())
-
 # View(sales_count_2017_2018)
 
 sum_profit <- sales_data_2017_2018 %>% 
   group_by(item_name) %>% 
   summarise(sum_total_profit = sum(total_profit)) %>% 
   arrange(sum_total_profit)
-
 # View(sum_profit)
 
+
+
 joined <- sum_profit %>% 
-  left_join(sales_count_2017_2018)
+  left_join(sales_count_2017_2018) %>% 
+  mutate(average_profit = sum_total_profit / sales_count)
 
-# View(joined)
+View(joined)
 
 
+# by time? maybe?
+# # in 2017 04/11/2017 
+# sales_data_2017_time <- sales_data_2017 %>% 
+#   filter(year == 2017, month_number == 4, day_of_week_name == 'Tuesday', week_number == 15) %>% 
+#   group_by(hour) %>% 
+#   summarise(count = n())
+# 
+# View(sales_data_2017_time)
+# 
+# # in 2018
+# sales_data_2018_time <- sales_data_2018 %>% 
+#   group_by(hour) %>% 
+#   summarise(count = n())
+# 
+# View(sales_data_2018_time)
 
